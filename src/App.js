@@ -1,4 +1,7 @@
+import { createContext, useState } from "react";
+import Header from "./components/Header";
 import Login from "./components/Login";
+import Product from "./components/Product";
 import "./style.css";
 
 const products = [
@@ -22,42 +25,48 @@ const products = [
   },
 ];
 
-const numbers = [1, 2, 3, 4];
+export const TemaContext = createContext();
+
+// ARRAY
+// - urutan harus sama (indeks)
+// - nama boleh beda
+
+// OBJEK
+// - urutan boleh beda
+// - nama harus sama (properti)
 
 function App() {
-  return (
-    <>
-      <header>
-        <h1>Neophyte Store</h1>
-      </header>
+  const [tema, setTema] = useState("terang");
 
+  function ubahTema() {
+    setTema(tema === "terang" ? "gelap" : "terang");
+  }
+
+  return (
+    <TemaContext.Provider value={[tema, ubahTema]}>
       <div
         style={{
-          display: "flex",
-          gap: 16,
+          background: tema === "terang" ? "#fff" : "#000",
+          color: tema === "terang" ? "#000" : "#fff",
         }}
       >
-        {products.map((p) => {
-          return (
-            <div
-              style={{
-                background: "pink",
-                padding: 8,
-                borderRadius: 16,
-              }}
-            >
-              <img src={p.photo} />
-              <h4>{p.name}</h4>
-              <h5>{p.price}</h5>
-            </div>
-          );
-        })}
+        <Header />
+        <div
+          style={{
+            display: "flex",
+            gap: 16,
+          }}
+        >
+          {products.map((p) => (
+            <Product key={p.id} product={p} />
+          ))}
+        </div>
+
+        <Login />
+
+        <footer>© 2022 Neophyte Industries</footer>
       </div>
-
-      <Login />
-
-      <footer>© 2022 Neophyte Industries</footer>
-    </>
+    </TemaContext.Provider>
   );
 }
 
