@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import Header from "./components/Header";
 import Login from "./components/Login";
 import Product from "./components/Product";
@@ -36,11 +36,19 @@ export const TemaContext = createContext();
 // - nama harus sama (properti)
 
 function App() {
-  const [tema, setTema] = useState("terang");
+  const [tema, setTema] = useState(localStorage.getItem("tema"));
+  const [users, setUsers] = useState([]);
 
   function ubahTema() {
     setTema(tema === "terang" ? "gelap" : "terang");
+    localStorage.setItem("tema", tema === "terang" ? "gelap" : "terang");
   }
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/api/users")
+      .then((response) => response.json())
+      .then((json) => setUsers(json));
+  }, []);
 
   return (
     <TemaContext.Provider value={[tema, ubahTema]}>
@@ -51,6 +59,26 @@ function App() {
         }}
       >
         <Header />
+
+        <table>
+          <thead>
+            <tr>
+              <th>NIM</th>
+              <th>Nama</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr>
+                <td>{user.nim}</td>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
         <div
           style={{
             display: "flex",
