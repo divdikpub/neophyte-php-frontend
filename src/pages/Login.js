@@ -1,6 +1,6 @@
 import { useState } from "react";
-import KotakTeks from "./KotakTeks";
-import Tombol from "./Tombol";
+import KotakTeks from "../components/KotakTeks";
+import Tombol from "../components/Tombol";
 
 function Login() {
   const [email, setEmail] = useState("");
